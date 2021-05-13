@@ -8,22 +8,32 @@ void displaySensorDetails(void)
   sensor_t sensor;
   bno.getSensor(&sensor);
   Serial.println("------------------------------------");
-  Serial.print  ("Sensor:       "); Serial.println(sensor.name);
-  Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
-  Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
-  Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" xxx");
-  Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" xxx");
-  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" xxx");
+  Serial.print("Sensor:       ");
+  Serial.println(sensor.name);
+  Serial.print("Driver Ver:   ");
+  Serial.println(sensor.version);
+  Serial.print("Unique ID:    ");
+  Serial.println(sensor.sensor_id);
+  Serial.print("Max Value:    ");
+  Serial.print(sensor.max_value);
+  Serial.println(" xxx");
+  Serial.print("Min Value:    ");
+  Serial.print(sensor.min_value);
+  Serial.println(" xxx");
+  Serial.print("Resolution:   ");
+  Serial.print(sensor.resolution);
+  Serial.println(" xxx");
   Serial.println("------------------------------------");
   Serial.println("");
 }
 
 void setup_bno(void)
 {
-  Serial.println("Orientation Sensor Test"); Serial.println("");
+  Serial.println("Orientation Sensor Test");
+  Serial.println("");
 
   /* Initialise the sensor */
-  if(!bno.begin())
+  if (!bno.begin())
   {
     /* There was a problem detecting the BNO055 ... check your connections */
     Serial.print("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
@@ -32,84 +42,91 @@ void setup_bno(void)
 
   /* Use external crystal for better accuracy */
   bno.setExtCrystalUse(true);
-   
+
   /* Display some basic information on this sensor */
   displaySensorDetails();
 }
 
-void printEvent(sensors_event_t* event, JsonObject obj) {
-  double x = -1000000, y = -1000000 , z = -1000000; //dumb values, easy to spot problem
-  if (event->type == SENSOR_TYPE_ACCELEROMETER) {
-    #ifdef debug
+void printEvent(sensors_event_t *event, JsonObject obj)
+{
+  double x = -1000000, y = -1000000, z = -1000000; //dumb values, easy to spot problem
+  if (event->type == SENSOR_TYPE_ACCELEROMETER)
+  {
+#ifdef debug
     Serial.print("Accl:");
-    #endif
+#endif
     x = event->acceleration.x;
     y = event->acceleration.y;
     z = event->acceleration.z;
   }
-  else if (event->type == SENSOR_TYPE_ORIENTATION) {
-    #ifdef debug
+  else if (event->type == SENSOR_TYPE_ORIENTATION)
+  {
+#ifdef debug
     Serial.print("Orient:");
-    #endif
+#endif
     x = event->orientation.x;
     y = event->orientation.y;
     z = event->orientation.z;
   }
-  else if (event->type == SENSOR_TYPE_MAGNETIC_FIELD) {
-    #ifdef debug
+  else if (event->type == SENSOR_TYPE_MAGNETIC_FIELD)
+  {
+#ifdef debug
     Serial.print("Mag:");
-    #endif
+#endif
     x = event->magnetic.x;
     y = event->magnetic.y;
     z = event->magnetic.z;
   }
-  else if (event->type == SENSOR_TYPE_GYROSCOPE) {
-    #ifdef debug
+  else if (event->type == SENSOR_TYPE_GYROSCOPE)
+  {
+#ifdef debug
     Serial.print("Gyro:");
-    #endif
+#endif
     x = event->gyro.x;
     y = event->gyro.y;
     z = event->gyro.z;
   }
-  else if (event->type == SENSOR_TYPE_ROTATION_VECTOR) {
-    #ifdef debug
+  else if (event->type == SENSOR_TYPE_ROTATION_VECTOR)
+  {
+#ifdef debug
     Serial.print("Rot:");
-    #endif
+#endif
     x = event->gyro.x;
     y = event->gyro.y;
     z = event->gyro.z;
   }
-  else if (event->type == SENSOR_TYPE_LINEAR_ACCELERATION) {
-    #ifdef debug
+  else if (event->type == SENSOR_TYPE_LINEAR_ACCELERATION)
+  {
+#ifdef debug
     Serial.print("Linear:");
-    #endif
+#endif
     x = event->acceleration.x;
     y = event->acceleration.y;
     z = event->acceleration.z;
   }
-  else {
-    #ifdef debug
+  else
+  {
+#ifdef debug
     Serial.print("Unk:");
-    #endif
+#endif
   }
   obj["x"] = x;
   obj["y"] = y;
   obj["z"] = z;
-  #ifdef debug
+#ifdef debug
   Serial.print("\tx= ");
   Serial.print(x);
   Serial.print(" |\ty= ");
   Serial.print(y);
   Serial.print(" |\tz= ");
   Serial.println(z);
-  #endif
+#endif
 }
-
 
 void loop_bno(JsonObject &root)
 {
   JsonObject bno055 = root.createNestedObject("bno055");
-  sensors_event_t orientationData , angVelocityData , linearAccelData, magnetometerData, accelerometerData, gravityData;
+  sensors_event_t orientationData, angVelocityData, linearAccelData, magnetometerData, accelerometerData, gravityData;
   bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
   bno.getEvent(&angVelocityData, Adafruit_BNO055::VECTOR_GYROSCOPE);
   bno.getEvent(&linearAccelData, Adafruit_BNO055::VECTOR_LINEARACCEL);
@@ -130,11 +147,11 @@ void loop_bno(JsonObject &root)
   printEvent(&gravityData, gravity_data);
 
   int8_t boardTemp = bno.getTemp();
-  #ifdef bebug
+#ifdef bebug
   Serial.println();
   Serial.print(F("temperature: "));
   Serial.println(boardTemp);
-  #endif
+#endif
   bno055["temperature"] = boardTemp;
 
   uint8_t system, gyro, accel, mag = 0;
@@ -144,7 +161,7 @@ void loop_bno(JsonObject &root)
   calibration["gyro"] = gyro;
   calibration["accel"] = accel;
   calibration["mag"] = mag;
-  #ifdef debug
+#ifdef debug
   Serial.println();
   Serial.print("Calibration: Sys=");
   Serial.print(system);
@@ -156,5 +173,5 @@ void loop_bno(JsonObject &root)
   Serial.println(mag);
 
   Serial.println("--");
-  #endif
+#endif
 }

@@ -7,8 +7,7 @@
 
 #endif
 
-
-static NMEAGPS   gps;
+static NMEAGPS gps;
 gps_fix fix;
 
 void setup_gps()
@@ -18,7 +17,8 @@ void setup_gps()
 
 void loop_gps(JsonObject &root)
 {
-  if (gps.available( gpsPort)) {
+  if (gps.available(gpsPort))
+  {
     fix = gps.read();
   }
   JsonObject gps = root.createNestedObject("gps");

@@ -2,15 +2,18 @@
 
 Adafruit_BMP085 bmp180;
 
-void setup_180() {
-    if (!bmp180.begin()) {
-	    Serial.println("Could not find a valid BMP085 sensor, check wiring!");
-    }
+void setup_180()
+{
+  if (!bmp180.begin())
+  {
+    Serial.println("Could not find a valid BMP085 sensor, check wiring!");
+  }
 }
 
-void loop_180(JsonObject &root) {
-    JsonObject bmp388 = root.createNestedObject("bmp388");
-    /*
+void loop_180(JsonObject &root)
+{
+  JsonObject bmp388 = root.createNestedObject("bmp388");
+  /*
     Serial.print("Temperature = ");
     Serial.print(bmp180.readTemperature());
     Serial.println(" *C");
@@ -39,7 +42,7 @@ void loop_180(JsonObject &root) {
     
     Serial.println();
     */
-    bmp388["temperature"] = bmp180.readTemperature();
-    bmp388["pressure"] = bmp180.readPressure();
-    bmp388["altitude"] = bmp180.readAltitude();
+  bmp388["temperature"] = bmp180.readTemperature();
+  bmp388["pressure"] = bmp180.readPressure();
+  bmp388["altitude"] = bmp180.readAltitude();
 }
