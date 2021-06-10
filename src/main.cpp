@@ -11,8 +11,6 @@
 #include "gps.h"
 #include "lora.h"
 
-#define PWM 34
-
 bool deployed = 0;
 
 void deploy()
@@ -88,7 +86,7 @@ void loop()
 {
     DynamicJsonDocument doc(1024);
     JsonObject obj = doc.to<JsonObject>();
-    obj["seconds"] = millis() / 1000;
+    obj["millis"] = millis();
     obj["deployed"] = deployed;
     obj["save"] = save;
     obj["flight"] = flight;
@@ -140,5 +138,5 @@ void loop()
     }
     //Wait for 1 second
     previous_height = obj["bmp388"]["altitude"].as<float>();
-    delay(200);
+    delay(100);
 }

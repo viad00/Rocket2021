@@ -8,7 +8,7 @@
 
 #define NRESET 35 //reset on LoRa device
 #define DIO0 33   //DIO0 on LoRa device, used for RX and TX done
-#define DIO1 32   //DIO1 on LoRa device, normally not used so set to -1
+#define DIO1 -1   //DIO1 on LoRa device, normally not used so set to -1
 #define DIO2 -1   //DIO2 on LoRa device, normally not used so set to -1
 
 #define LORA_DEVICE DEVICE_SX1278 //this is the device we are using
